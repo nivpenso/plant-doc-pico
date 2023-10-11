@@ -2,10 +2,11 @@ import urequests
 import machine
 import time
 import network
-from ../CONFIG import WIFI_SSID, WIFI_PASSWORD
-from ../CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
-from ../CONFIG import GITHUB_PROJECT_URL
-from ota_update.main.ota_updater import OTAUpdater
+import sys
+#from ../CONFIG import WIFI_SSID, WIFI_PASSWORD
+#from ../CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
+#from ../CONFIG import GITHUB_PROJECT_URL
+from src.ota_updater import OTAUpdater
 
 
 def download_and_install_update_if_available():
