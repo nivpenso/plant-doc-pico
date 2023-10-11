@@ -3,14 +3,18 @@ import machine
 import time
 import network
 import sys
-#from ../CONFIG import WIFI_SSID, WIFI_PASSWORD
-#from ../CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
-#from ../CONFIG import GITHUB_PROJECT_URL
+import sys
+import os
 from src.ota_updater import OTAUpdater
+# Add the parent directory to sys.path
+sys.path.append("..")
+from CONFIG import WIFI_SSID, WIFI_PASSWORD
+from CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
+from CONFIG import GITHUB_PROJECT_URL
 
 
 def download_and_install_update_if_available():
-    o = OTAUpdater(GITHUB_PROJOCT_URL)
+    o = OTAUpdater(GITHUB_PROJECT_URL)
     o.install_update_if_available_after_boot(WIFI_SSID, WIFI_PASSWORD)
 
 
@@ -93,7 +97,6 @@ def analog_to_moisture_percentage():
 def main():
     INDICATION_LED.off()
     connect_wifi()
-    otaupdater=OTAUpdater(WIFI_SSID, WIFI_PASSWORD, GITHUB_URL, "main.py")
     print('---------------------')
     while True:
         blink_sec(0.5)
