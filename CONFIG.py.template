@@ -1,0 +1,9 @@
+# Wi-Fi configuration
+WIFI_SSID = ""
+WIFI_PASSWORD = ""
+
+# InfluxDB configuration
+INFLUXDB_URL = ""
+INFLUXDB_USER = ""
+INFLUXDB_PASSWORD = ""
+INFLUX_DB_TOKEN = ""
