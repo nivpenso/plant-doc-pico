@@ -2,9 +2,15 @@ import urequests
 import machine
 import time
 import network
-from CONFIG import WIFI_SSID, WIFI_PASSWORD
-from CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
-from ota import OTAUpdater
+from ../CONFIG import WIFI_SSID, WIFI_PASSWORD
+from ../CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
+from ../CONFIG import GITHUB_PROJECT_URL
+from ota_update.main.ota_updater import OTAUpdater
+
+
+def download_and_install_update_if_available():
+    o = OTAUpdater(GITHUB_PROJOCT_URL)
+    o.install_update_if_available_after_boot(WIFI_SSID, WIFI_PASSWORD)
 
 
 # Sensor reading
@@ -105,5 +111,12 @@ def main():
         time.sleep(3)  # Send data every 10 seconds
         
 
-if __name__ == "__main__":
+def start():
     main()
+
+
+def boot():
+    download_and_install_update_if_available()
+    start()
+
+boot()
