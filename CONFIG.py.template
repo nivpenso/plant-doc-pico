@@ -1,3 +1,6 @@
+# GITHUB PROJECT
+GITHUB_PROJECT_URL="https://github.com/nivpenso/plant-doc-pico"
+
 # Wi-Fi configuration
 WIFI_SSID = ""
 WIFI_PASSWORD = ""
