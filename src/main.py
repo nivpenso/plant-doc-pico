@@ -9,10 +9,10 @@ from src.ota_updater import OTAUpdater
 # Add the parent directory to sys.path
 sys.path.append("..")
 from CONFIG import WIFI_SSID, WIFI_PASSWORD
-from CONFIG import INFLUXDB_URL, INFLUXDB_USER, INFLUXDB_PASSWORD, INFLUX_DB_TOKEN
+from CONFIG import INFLUXDB_URL, INFLUX_DB_TOKEN
 from CONFIG import GITHUB_PROJECT_URL
 
-otaUpdater = OTAUpdater(GITHUB_PROJECT_URL, github_src_dir='src', module='', main_dir='src')
+otaUpdater = OTAUpdater(GITHUB_PROJECT_URL, github_src_dir='', module='', main_dir='src')
 #otaUpdater = OTAUpdater(GITHUB_PROJECT_URL)
 
 
@@ -92,7 +92,7 @@ def analog_to_moisture_percentage():
 
     return moisture_percentage
 
-def build_soil_moisture_message():
+def build_soil_moisture_message(sensor_value):
     return {
         "measurement": "soil_moisture",
         "fields": {
@@ -106,7 +106,6 @@ def build_soil_moisture_message():
 
 def main():
     INDICATION_LED.off()
-    check_for_update_to_install_during_next_reboot()
     connect_wifi()
     print('---------------------')
     while True:
@@ -116,24 +115,28 @@ def main():
         print("Sensor Data " + str(sensor_value))
         
         # Prepare data to send to InfluxDB
-        message = build_soil_moisture_message()
-        send_to_influxdb(message.measurement, message.fields, message.tags)
+        message = build_soil_moisture_message(sensor_value)
+        send_to_influxdb(message["measurement"], message["fields"], message["tags"])
         
         time.sleep(3)
-        hasUpdated = otaUpdater.install_update_if_available()
-        if hasUpdated:
-            print("updated: ", hasUpdated)
+        update_avail = otaUpdater.check_for_update_to_install_during_next_reboot()
+        if update_avail:
             machine.reset()
         else:
-            print("not update updated")
+            print("not new version to update")
 
 def start():
     main()
 
 
 def boot():
-    otaUpdater.install_update_if_available_after_boot(WIFI_SSID, WIFI_PASSWORD)
-    otaUpdater.check_for_update_to_install_during_next_reboot()
-    #start()
+    updated = otaUpdater.install_update_if_available_after_boot(WIFI_SSID, WIFI_PASSWORD)
+    if (updated):
+        machine.reset()
+    
+    update_avail = otaUpdater.check_for_update_to_install_during_next_reboot()
+    if (update_avail):
+        machine.reset()
+    start()
 
 boot()
